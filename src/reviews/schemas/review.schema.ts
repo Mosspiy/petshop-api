@@ -1,0 +1,22 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+
+export type ReviewDocument = Review & Document;
+
+@Schema({ versionKey: false, timestamps: true })
+export class Review {
+  @Prop({ type: Types.ObjectId, ref: 'User', required: false }) // เปลี่ยนเป็น required: false
+  userId: Types.ObjectId;
+  
+  // ฟิลด์อื่นๆ ยังคงเหมือนเดิม
+  @Prop({ type: Types.ObjectId, ref: 'Order', required: true })
+  orderId: Types.ObjectId;
+  
+  @Prop({ required: true, min: 1, max: 5 })
+  rating: number;
+  
+  @Prop()
+  comment: string;
+}
+
+export const ReviewSchema = SchemaFactory.createForClass(Review);
