@@ -1,30 +1,24 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  private readonly logger = new Logger(JwtStrategy.name);
-
-  constructor() {
-    // ใช้ secret key ที่แน่นอนสำหรับการทดสอบ
-    const secret = 'your-secret-key';
-    
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: secret,
+      secretOrKey: configService.get<string>('JWT_SECRET'),
       ignoreExpiration: false,
     });
-    
-    this.logger.log('JWT Strategy initialized with fixed secret');
   }
 
   async validate(payload: any) {
-    return { 
+    return {
       id: payload.sub,
       lineId: payload.lineId,
-      displayName: payload.displayName, // เพิ่ม displayName
-      pictureUrl: payload.pictureUrl    // เพิ่ม pictureUrl
+      displayName: payload.displayName,
+      pictureUrl: payload.pictureUrl,
     };
   }
 }
