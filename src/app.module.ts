@@ -17,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal:true }),
     MongooseModule.forRoot('mongodb+srv://mosspiyawat:JAihPRCtl0qOFczV@petshop.jtwpsjm.mongodb.net/?retryWrites=true&w=majority&appName=petshop'),
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'uploads'),
