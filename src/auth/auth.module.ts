@@ -14,10 +14,13 @@ import { LineService } from './line.service';
     HttpModule,
     UsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'your-secret-key',
-      signOptions: { expiresIn: '24h' },
-    }),
+    JwtModule.registerAsync({
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: async (config: ConfigService) => ({
+    secret: config.get('JWT_SECRET'),
+    signOptions: { expiresIn: '24h' },
+  }),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, LineStrategy, LineService],
